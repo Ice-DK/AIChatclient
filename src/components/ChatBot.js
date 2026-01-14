@@ -68,6 +68,12 @@ function ChatBot() {
     setIsLoading(true);
 
     try {
+      console.log('=== DEBUG: Sending message ===');
+      console.log('Endpoint:', process.env.REACT_APP_AZURE_FOUNDRY_ENDPOINT);
+      console.log('API Key (first 10):', process.env.REACT_APP_AZURE_FOUNDRY_API_KEY?.substring(0, 10));
+      console.log('Deployment:', process.env.REACT_APP_AZURE_FOUNDRY_DEPLOYMENT);
+      console.log('Provider:', process.env.REACT_APP_AI_PROVIDER);
+      
       // Send besked til AI via AIService (håndterer MCP tools automatisk)
       const response = await aiService.sendMessage(
         userMessage.content,

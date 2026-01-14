@@ -64,8 +64,8 @@ class MCPClient {
    */
   async connectAll() {
     const connections = [];
-    for (const [name, server] of this.servers) {
-      connections.push(this.connect(name));
+    for (const [serverName] of this.servers) {
+      connections.push(this.connect(serverName));
     }
     await Promise.allSettled(connections);
     this.isConnected = true;
@@ -298,6 +298,20 @@ class MCPClient {
   }
 
   /**
+   * Konverter MCP tools til Anthropic format
+   */
+  getToolsAsAnthropicFormat() {
+    return this.getAllTools().map((tool) => ({
+      name: tool.id.replace(':', '_'), // Replace : with _ for valid function names
+      description: tool.description || '',
+      input_schema: tool.inputSchema || {
+        type: 'object',
+        properties: {},
+      },
+    }));
+  }
+
+  /**
    * Hent server status
    */
   getServerStatus() {
@@ -319,7 +333,7 @@ class MCPClient {
   async disconnectAll() {
     this.tools.clear();
     this.resources.clear();
-    for (const [name, server] of this.servers) {
+    for (const [, server] of this.servers) {
       server.status = 'disconnected';
       server.tools = [];
       server.resources = [];
