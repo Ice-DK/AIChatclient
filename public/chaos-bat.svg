@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="batGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea"/>
+      <stop offset="100%" style="stop-color:#764ba2"/>
+    </linearGradient>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="48" fill="url(#batGradient)"/>
+  <!-- Bat body -->
+  <ellipse cx="50" cy="55" rx="12" ry="15" fill="#1a1a2e"/>
+  <!-- Left wing -->
+  <path d="M38 50 Q20 35 10 55 Q15 50 20 52 Q18 45 25 48 Q22 40 32 45 Q28 38 38 42 Z" fill="#1a1a2e"/>
+  <!-- Right wing -->
+  <path d="M62 50 Q80 35 90 55 Q85 50 80 52 Q82 45 75 48 Q78 40 68 45 Q72 38 62 42 Z" fill="#1a1a2e"/>
+  <!-- Ears -->
+  <path d="M42 42 L38 28 L46 38 Z" fill="#1a1a2e"/>
+  <path d="M58 42 L62 28 L54 38 Z" fill="#1a1a2e"/>
+  <!-- Eyes -->
+  <circle cx="44" cy="50" r="4" fill="#667eea"/>
+  <circle cx="56" cy="50" r="4" fill="#667eea"/>
+  <circle cx="45" cy="49" r="1.5" fill="white"/>
+  <circle cx="57" cy="49" r="1.5" fill="white"/>
+  <!-- Cute fangs -->
+  <path d="M46 62 L48 67 L50 62" fill="white"/>
+  <path d="M50 62 L52 67 L54 62" fill="white"/>
+</svg>

@@ -1,0 +1,19 @@
+apiVersion: v2
+name: ai-chatclient
+description: AI ChatBot Client - React frontend with Hono backend, PostgreSQL and Auth0
+dependencies:
+  # Frontend
+  - name: application
+    repository: oci://registry.netic.dk/cloudfactory
+    version: 1.0.48
+    alias: frontend
+  
+  # Backend API
+  - name: application
+    repository: oci://registry.netic.dk/cloudfactory
+    version: 1.0.48
+    alias: backend
+
+type: application
+version: 3.0.0
+appVersion: "3.0.0"

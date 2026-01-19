@@ -1,0 +1,10 @@
+apiVersion: v2
+name: convex-backend
+description: Self-hosted Convex Backend for AI ChatClient
+dependencies:
+  - name: application
+    repository: oci://registry.netic.dk/cloudfactory
+    version: 1.0.48
+type: application
+version: 1.0.0
+appVersion: "1.0.0"

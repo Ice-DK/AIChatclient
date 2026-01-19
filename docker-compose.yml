@@ -1,0 +1,74 @@
+version: "3.8"
+
+services:
+  # PostgreSQL with pgvector
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: aichatclient-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: aichatclient
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/drizzle:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: aichatclient-backend
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/aichatclient
+      DATABASE_SSL: "false"
+      AUTH0_DOMAIN: ${AUTH0_DOMAIN}
+      AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      AZURE_OPENAI_API_KEY: ${AZURE_OPENAI_API_KEY}
+      AZURE_OPENAI_ENDPOINT: ${AZURE_OPENAI_ENDPOINT}
+      AZURE_OPENAI_MODEL: ${AZURE_OPENAI_MODEL:-gpt-4o}
+      ATLASSIAN_CLIENT_ID: ${ATLASSIAN_CLIENT_ID}
+      ATLASSIAN_CLIENT_SECRET: ${ATLASSIAN_CLIENT_SECRET}
+      MS_PARTNER_CLIENT_ID: ${MS_PARTNER_CLIENT_ID}
+      MS_PARTNER_CLIENT_SECRET: ${MS_PARTNER_CLIENT_SECRET}
+      BACKEND_URL: http://localhost:3000
+      FRONTEND_URL: http://localhost:5173
+      PORT: "3000"
+      NODE_ENV: development
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend/src:/app/src:ro
+
+  # Frontend (development)
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: aichatclient-frontend
+    environment:
+      VITE_API_URL: http://localhost:3000/api
+      VITE_AUTH0_DOMAIN: ${AUTH0_DOMAIN}
+      VITE_AUTH0_CLIENT_ID: ${AUTH0_CLIENT_ID}
+      VITE_AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./src:/app/src:ro
+      - ./public:/app/public:ro
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
