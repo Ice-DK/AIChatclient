@@ -1,6 +1,0 @@
-dependencies:
-- name: application
-  repository: oci://registry.netic.dk/cloudfactory
-  version: 1.0.48
-digest: sha256:44b0bd83addfce4c13172905893e0d5471699356f3cdd9a0bc0363772dd332a7
-generated: "2026-01-16T13:23:31.0368035+01:00"
