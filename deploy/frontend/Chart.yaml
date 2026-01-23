@@ -1,0 +1,10 @@
+apiVersion: v2
+name: ai-chatclient-frontend
+description: AI ChatBot Client - React frontend with Auth0
+dependencies:
+  - name: application
+    repository: oci://registry.netic.dk/cloudfactory
+    version: 1.0.48
+type: application
+version: 3.0.0
+appVersion: "3.0.0"

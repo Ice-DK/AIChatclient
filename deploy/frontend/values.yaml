@@ -1,0 +1,48 @@
+application:
+  applicationName: ai-chatclient-frontend
+
+  deployment:
+    enabled: true
+    replicas: 1
+    image:
+      repository: registry.netic.dk/cloudfactory/ai-chatclient-frontend
+      tag: "3.0.0"
+    ports:
+      - containerPort: 80
+        name: http
+    resources:
+      limits:
+        memory: 128Mi
+      requests:
+        cpu: 50m
+        memory: 64Mi
+    livenessProbe:
+      httpGet:
+        path: /health
+        port: http
+      initialDelaySeconds: 10
+      periodSeconds: 30
+      timeoutSeconds: 3
+    readinessProbe:
+      httpGet:
+        path: /health
+        port: http
+      initialDelaySeconds: 5
+      periodSeconds: 10
+      timeoutSeconds: 3
+    # NOTE: Frontend er statisk bygget - VITE_* variabler skal sættes ved Docker build
+    # Se Dockerfile for build-args
+
+  service:
+    enabled: true
+    ports:
+      - port: 80
+        name: http
+        protocol: TCP
+        targetPort: http
+
+  httpProxy:
+    enabled: true
+    routes:
+      - conditions:
+          - prefix: /

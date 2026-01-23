@@ -1,0 +1,112 @@
+application:
+  applicationName: ai-chatclient-backend
+  
+  externalSecret:
+    enabled: true
+    files:
+      ai-chatclient-backend-secrets:
+        data:
+          DATABASE_URL:
+            remoteRef:
+              key: k8s/prod21/dev-pewa/unrestricted/ai-chatclient-backend
+              property: DATABASE_URL
+          DATABASE_SSL:
+            remoteRef:
+              key: k8s/prod21/dev-pewa/unrestricted/ai-chatclient-backend
+              property: DATABASE_SSL
+          AUTH0_DOMAIN:
+            remoteRef:
+              key: k8s/prod21/dev-pewa/unrestricted/ai-chatclient-backend
+              property: AUTH0_DOMAIN
+          AUTH0_AUDIENCE:
+            remoteRef:
+              key: k8s/prod21/dev-pewa/unrestricted/ai-chatclient-backend
+              property: AUTH0_AUDIENCE
+          ENCRYPTION_KEY:
+            remoteRef:
+              key: k8s/prod21/dev-pewa/unrestricted/ai-chatclient-backend
+              property: ENCRYPTION_KEY
+          AZURE_OPENAI_API_KEY:
+            remoteRef:
+              key: k8s/prod21/dev-pewa/unrestricted/ai-chatclient-backend
+              property: AZURE_OPENAI_API_KEY
+          AZURE_OPENAI_ENDPOINT:
+            remoteRef:
+              key: k8s/prod21/dev-pewa/unrestricted/ai-chatclient-backend
+              property: AZURE_OPENAI_ENDPOINT
+          AZURE_OPENAI_MODEL:
+            remoteRef:
+              key: k8s/prod21/dev-pewa/unrestricted/ai-chatclient-backend
+              property: AZURE_OPENAI_MODEL
+          ATLASSIAN_CLIENT_ID:
+            remoteRef:
+              key: k8s/prod21/dev-pewa/unrestricted/ai-chatclient-backend
+              property: ATLASSIAN_CLIENT_ID
+          ATLASSIAN_CLIENT_SECRET:
+            remoteRef:
+              key: k8s/prod21/dev-pewa/unrestricted/ai-chatclient-backend
+              property: ATLASSIAN_CLIENT_SECRET
+          MS_PARTNER_CLIENT_ID:
+            remoteRef:
+              key: k8s/prod21/dev-pewa/unrestricted/ai-chatclient-backend
+              property: MS_PARTNER_CLIENT_ID
+          MS_PARTNER_CLIENT_SECRET:
+            remoteRef:
+              key: k8s/prod21/dev-pewa/unrestricted/ai-chatclient-backend
+              property: MS_PARTNER_CLIENT_SECRET
+
+  deployment:
+    enabled: true
+    replicas: 1
+    image:
+      repository: registry.netic.dk/cloudfactory/ai-chatclient-backend
+      tag: "3.0.0"
+    ports:
+      - containerPort: 8080
+        name: http
+    resources:
+      limits:
+        memory: 512Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+    livenessProbe:
+      httpGet:
+        path: /health
+        port: http
+      initialDelaySeconds: 10
+      periodSeconds: 30
+      timeoutSeconds: 3
+    readinessProbe:
+      httpGet:
+        path: /health
+        port: http
+      initialDelaySeconds: 5
+      periodSeconds: 10
+      timeoutSeconds: 3
+    env:
+      - name: PORT
+        value: "8080"
+      - name: NODE_ENV
+        value: "production"
+      - name: FRONTEND_URL
+        value: "https://chaosbot.cfcore.dk"
+      - name: BACKEND_URL
+        value: "https://chaosbot-api.cfcore.dk"
+    envFrom:
+      - secretRef:
+          name: ai-chatclient-backend-secrets
+
+  service:
+    enabled: true
+    ports:
+      - port: 8080
+        name: http
+        protocol: TCP
+        targetPort: http
+
+  httpProxy:
+    enabled: true
+    routes:
+      - conditions:
+          - prefix: /
